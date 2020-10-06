@@ -1,0 +1,16 @@
+<server>
+
+<httpEndpoint id="defaultHttpEndpoint" host="*" httpPort="${env.defaultHttpPort}" httpsPort="${env.defaultHttpsPort}">
+
+
+<accessLogging filepath="${shome}/logs/${env.jvmname}_${hostname}_access.log" maxFileSize="10240" maxFiles="0"
+ logFormat='%{FBCIP}i | %u | %t | %r | %s | %D | %b | %{Referer}i | %{User-agent}i | %{Cookie}i | %{Set-Cookie}o | %{Host}i | %{screencode}i | %{client-type}i | %{CorrelationID}i | %{cb_sn}i' />
+
+<httpOptions readTimeout="10s" writeTimeout="10s" persistTimeout="90s" maxKeepAliveRequests="1000" http2ConnectionIdleTimeout="20s" AutoDecompression="false" keepAliveEnabled="false"/>
+
+</httpEndpoint>
+
+<executor name="Main-Thread-Pool" maxThreads="250"/>
+
+
+</server>

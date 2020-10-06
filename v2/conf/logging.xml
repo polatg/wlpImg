@@ -1,0 +1,3 @@
+<server>
+<logging maxFileSize="2048" maxFiles="0" logDirectory="${shome}/logs/" messageFileName="${env.jvmname}_${hostname}.out" consoleLogLevel="INFO" copySystemStreams="false"/>
+</server>

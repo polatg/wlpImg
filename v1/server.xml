@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server description="gokhanLS">
+
+<include location="${shome}/conf/features.xml"/>
+<include location="${shome}/conf/port.xml"/>
+<include location="${shome}/conf/general.xml"/>
+<include location="${shome}/conf/sharedlibrary.xml"/>
+<include location="${shome}/conf/application.xml"/>
+<include location="${shome}/conf/datasource.xml"/>
+<include location="${shome}/conf/keystore.xml"/>
+<include location="${shome}/conf/logging.xml"/>
+
+</server>

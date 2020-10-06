@@ -1,0 +1,25 @@
+<server>
+
+<!-- Automatically expand WAR files and EAR files -->
+    <applicationManager autoExpand="true"/>
+
+    <!-- Define an Administrator and non-Administrator -->
+  <basicRegistry id="basic">
+      <user name="wasadmin" password="wasadmin"/>
+   </basicRegistry>
+
+   <!-- Assign 'admin' to Administrator -->
+   <administrator-role>
+      <user>wasadmin</user>
+   </administrator-role>
+
+<applicationMonitor updateTrigger="disabled"/>
+<config updateTrigger="disabled"/>
+
+<remoteFileAccess>
+        <writeDir>${server.config.dir}</writeDir>
+        <writeDir>/fbapp/CORE/liberty/conf</writeDir>
+</remoteFileAccess>
+<transaction recoverOnStartup="false" waitForRecovery="false" totalTranLifetimeTimeout="0"/>
+
+</server>

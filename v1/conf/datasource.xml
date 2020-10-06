@@ -1,0 +1,14 @@
+<server>
+<dataSource id="PETDS" jndiName="jdbc/pets" transactional="true" type="javax.sql.ConnectionPoolDataSource" jdbcDriverRef="MySQLLib">
+
+    <connectionManager maxPoolSize="2" minPoolSize="0" connectionTimeout="10s" maxIdleTime="10m" purgePolicy="FailingConnectionOnly"/>
+    <properties databaseName="${dbName}" serverName="${dbServer}" portNumber="${dbPort}" user="${dbUser}" password="${dbPass}"/>
+</dataSource>
+
+<jdbcDriver id="MySQLLib" libraryRef="MySQLLibRef" driverClassName="com.mysql.cj.jdbc.Driver"/>
+
+<library id="MySQLLibRef">
+<file name="/fbapp/jdbc_driver/${mysqlDriver}"/>
+</library>
+
+</server>

@@ -1,0 +1,58 @@
+FROM registry.access.redhat.com/ubi7/ubi:latest
+USER root
+ENV image_version=v1
+ENV image_admin=gokhanPolat1
+ENV image_admin3=gokhanPolat1
+ENV TZ Europe/Istanbul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+ARG jdkfile=ibm-java-sdk-8.0-6.15-linux-x86_64.tar
+ARG jdkfile2=java-1.8.0-openjdk-1.8.0.265.b01-0.portable.jdk.el.x86_64.tar.xz
+ARG wlpfile=wlp-core-all-20.0.0.8.jar
+#ENV JAVA_HOME /fbjava/ibm/ibm-java-x86_64-80/
+ENV JAVA_HOME /fbjava/openjdk/java-1.8.0-openjdk-1.8.0.265/
+ENV wlp.install.dir /WLP/wlp
+ENV shome /fbapp/myservice
+RUN echo 'sslverify=false' >> /etc/yum.conf
+RUN echo 'enabled=0' >> /etc/yum/pluginconf.d/subscription-manager.conf
+RUN yum install -y  nmap-ncat.x86_64 net-tools telnet.x86_64 curl wget iputils lsof sysstat hostname perl tcpdump nmon unzip dbus ntp
+RUN yum -y clean all
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+RUN groupadd grwas
+RUN useradd -u 1500 -g grwas wasadmin -m
+RUN mkdir -m 755 -p /WLP
+RUN mkdir -m 755 -p /fbapp/scripts
+RUN mkdir -m 755 -p /fbapp/jdbc_driver
+RUN mkdir -m 755 -p $shome
+RUN mkdir -m 755 -p $shome/src
+RUN mkdir -m 755 -p $shome/logs
+RUN mkdir -m 755 -p $shome/conf
+RUN mkdir -m 755 -p $shome/apps
+RUN mkdir -m 755 -p /fbjava/ibm
+RUN mkdir -m 755 -p /fbjava/openjdk
+RUN chown  -R wasadmin:grwas /fbapp
+RUN chown  -R wasadmin:grwas /fbjava
+RUN chown  -R wasadmin:grwas /WLP
+user wasadmin
+RUN whoami
+COPY --chown=wasadmin:grwas $jdkfile2 $wlpfile /tmp/
+#COPY --chown=wasadmin:grwas $jdkfile $jdkfile2 $wlpfile /tmp/
+#RUN cd /fbjava/ibm;tar xvf /tmp/$jdkfile
+RUN cd /fbjava/openjdk;tar xvf /tmp/$jdkfile2;mv java-1.8.0-openjdk-1.8.0.265.b01-0.portable.jdk.el.x86_64 java-1.8.0-openjdk-1.8.0.265
+ENV WLP_LOGGING_CONSOLE_LOGLEVEL=INFO
+ENV WLP_LOGGING_CONSOLE_SOURCE=message,trace,accessLog,ffdc,audit
+#ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/fbjava/ibm/ibm-java-x86_64-80/bin
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/fbjava/openjdk/java-1.8.0-openjdk-1.8.0.265/bin
+RUN java -version
+RUN /bin/bash -c 'export LANG=en_US.UTF-8;cd /WLP ; jar xvf /tmp/$wlpfile ; ls -la /WLP/wlp/bin ; chmod -R 755 /WLP/wlp/bin  ; ls -la /WLP/wlp/bin;/WLP/wlp/bin/productInfo;/WLP/wlp/bin/server create gokhanLS'
+ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$JAVA_HOME/bin:/WLP/wlp/bin
+ENV WLP_SERVER_ROOT=/WLP/wlp/usr/servers/gokhanLS/
+ENV image_admini2=gokhanPolat1
+COPY --chown=wasadmin:grwas ./$image_version/*.* $WLP_SERVER_ROOT/
+COPY --chown=wasadmin:grwas ./$image_version/app/*.* $shome/apps/
+COPY --chown=wasadmin:grwas ./$image_version/conf/*.* $shome/conf/
+COPY --chown=wasadmin:grwas mysql-connector-java-8.0.20.jar /fbapp/jdbc_driver/
+COPY --chown=wasadmin:grwas startUp.sh /fbapp/scripts/
+CMD export LANG=en_US.UTF-8
+WORKDIR $shome/logs
+#ENTRYPOINT ["/WLP/wlp/bin/server", "run", "gokhanLS"]
+ENTRYPOINT /WLP/wlp/bin/server run gokhanLS

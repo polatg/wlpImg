@@ -1,0 +1,12 @@
+<server>
+<library id="sharedlib">
+
+<fileset dir="${shome}/lib/" includes="*.jar"/>
+<folder dir="${shome}/conf/"/>
+</library>
+
+<library id="MySQLLib">
+<file name="/fbapp/jdbc_driver/${env.mysqlDriver}"/>
+</library>
+
+</server>

@@ -1,0 +1,10 @@
+<server description="Ping Test Application">
+<application id="PingApp" name="PingApp" type="war" location="${shome}/apps/PingWebApp.war" context-root="/hc">
+<classloader commonLibraryRef="sharedlib"/>
+</application>
+
+<application id="PetDS" name="PetDS" type="war" location="${shome}/apps/TestLiberty.war" context-root="/">
+<classloader commonLibraryRef="sharedlib,MySQLLib"/>
+</application>
+
+</server>
